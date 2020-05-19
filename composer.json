@@ -11,6 +11,7 @@
     "minimum-stability": "dev",
     "require": {
         "smarty/smarty": "~3.1@dev",
-      "ext-mysqli": "*"
+      "ext-mysqli": "*",
+      "ext-json": "*"
     }
 }

@@ -1,15 +1,16 @@
 <?php
 
 namespace API\Controller;
+use API\Controller;
 use Smarty;
 use API\Model\testModel;
 
-class test
+class test extends Controller
 {
     public function default()
     {
         echo "Hello world";
-        var_dump(get_class(testModel::class));
+        var_dump($this->request);
     }
 
     public function test()
