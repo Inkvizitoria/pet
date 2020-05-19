@@ -6,6 +6,8 @@ class Router
     function run(){
         $url = trim($_SERVER['REQUEST_URI'], '/');
         $route = explode('/', $url);
+        $params = explode('?', $route[array_key_last($route)]);
+        $route[array_key_last($route)] = $params[0];
         $url = trim($route[0], '/');
         if(array_key_exists(1, $route)){
             $function = trim($route[1], '/');
