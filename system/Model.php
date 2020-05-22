@@ -27,19 +27,20 @@ class Model
         return Database::execute_sql($sql_statment);
     }
 
-    public function getColumns(string $column_name, string $table){
+    public function getFieldByAll(string $column_name, string $table){
         $sql_statment = "SELECT ".$this->db->real_escape_string($column_name)." FROM `$table`";
         return Database::execute_sql($sql_statment);
     }
 
-    public function getColumnByField(int $id, string $field, string $column_name,  string $table){
-        $sql_statment = "SELECT " . $this->db->real_escape_string($column_name) . " 
-                         FROM   " . $this->db->real_escape_string($table) . " 
-                         WHERE  " . $this->db->real_escape_string($field) . " = $id";
+    public function getFieldByValue(string $value, string $field, string $column_name,  string $table){
+        $sql_statment = "SELECT `" . $this->db->real_escape_string($column_name) . "` 
+                         FROM   `" . $this->db->real_escape_string($table) . "` 
+                         WHERE  `" . $this->db->real_escape_string($field) . "` = \"" . $this->db->real_escape_string($value) . "\"";
+
         return Database::execute_sql($sql_statment);
     }
 
-    public function getColumnById(int $id, string $column_name,  string $table){
+    public function getFieldById(int $id, string $column_name,  string $table){
         $sql_statment = "SELECT ".$this->db->real_escape_string($column_name)." FROM `".$table."` WHERE id = $id";
         return Database::execute_sql($sql_statment);
     }
