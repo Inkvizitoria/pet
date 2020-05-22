@@ -31,11 +31,18 @@ class database
         $db = Database::getConnection();
         $query_result = [];
         try {
-            $result = $db->query($sql_statement);
-            while ($row = $result->fetch_assoc()) {
-                array_push($query_result, $row);
+            if ($stmt = $db->prepare($sql_statement)) {
+                $stmt->execute();
+                if ($result =$stmt->get_result()){
+                    while ($row = $result->fetch_assoc())
+                    {
+                        array_push($query_result, $row);
+                    }
+                }
+                $stmt->store_result();
+                $stmt->free_result();
+                $stmt->close();
             }
-            $result->free();
             return $query_result;
         } catch (Exception $exception){
             return $exception->getMessage();

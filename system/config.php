@@ -12,7 +12,7 @@ define("SMARTY_TEMPLATE", 'vendor/smarty/smarty/libs/Smarty.class.php');
 //Папка с файлами javascript
 define('DIR_JS', 'API/Template/js/');
 //Папка с файлами css
-define('DIR_CSS', 'API/Template/css/');
+define('DIR_CSS', 'API/Template/css/stylesheet.css');
 //папка с файлами images
 define('DIR_IMAGE', SERVER_NAME.'/Image/');
 /**

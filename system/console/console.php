@@ -30,7 +30,7 @@ class Console {
     const BG_WHITE          = '47';
     //PATH
     const DEFAULT_PATH      = 'API/Controller/';
-    const DEFAULT_NAMESPACE = 'API\Controller\\';
+    const DEFAULT_NAMESPACE = 'API\Controller';
 
 
     public function __construct($argc, $argv) {
@@ -91,7 +91,7 @@ class Console {
         $namespace = trim(fgets(STDIN));
 
         if(!empty($namespace)){
-            $namespace = self::DEFAULT_NAMESPACE.$namespace;
+            $namespace = self::DEFAULT_NAMESPACE.'\\'.$namespace;
             echo $this->format( ['color'=>self::BLUE],
                 'namespace '.$this->format( ['color'=>self::GREEN], $namespace."\n"));
 

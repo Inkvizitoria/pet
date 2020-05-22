@@ -6,7 +6,7 @@ use System\Database\database;
 
 class Model
 {
-    private $db;
+    protected $db;
 
     public function __construct()
     {
@@ -27,15 +27,20 @@ class Model
         return Database::execute_sql($sql_statment);
     }
 
-    public function getColumn(string $column_name, string $table){
-        $this->db->real_escape_string($column_name);
-        $sql_statment = "SELECT `$column_name` FROM `$table`";
+    public function getColumns(string $column_name, string $table){
+        $sql_statment = "SELECT ".$this->db->real_escape_string($column_name)." FROM `$table`";
         return Database::execute_sql($sql_statment);
     }
 
-    public function getOneColumn(int $id, string $column_name,  string $table){
-        $this->db->real_escape_string($column_name);
-        $sql_statment = "SELECT $column_name FROM `$table` WHERE id = $id";
+    public function getColumnByField(int $id, string $field, string $column_name,  string $table){
+        $sql_statment = "SELECT " . $this->db->real_escape_string($column_name) . " 
+                         FROM   " . $this->db->real_escape_string($table) . " 
+                         WHERE  " . $this->db->real_escape_string($field) . " = $id";
+        return Database::execute_sql($sql_statment);
+    }
+
+    public function getColumnById(int $id, string $column_name,  string $table){
+        $sql_statment = "SELECT ".$this->db->real_escape_string($column_name)." FROM `".$table."` WHERE id = $id";
         return Database::execute_sql($sql_statment);
     }
 }

@@ -9,9 +9,15 @@ class Router
         $params = explode('?', $route[array_key_last($route)]);
         $route[array_key_last($route)] = $params[0];
         $url = trim($route[0], '/');
+
+        if($route[0] == 'stylesheet'){
+            readfile(DIR_CSS);
+        }
+
         if(array_key_exists(1, $route)){
             $function = trim($route[1], '/');
         }
+
         if (file_exists(DIR_CONTROLLER . trim($route[0], '/') . '.php')){
             if(count($route) >= 2){
                 require_once DIR_CONTROLLER . $url . '.php';
@@ -26,6 +32,8 @@ class Router
                 }
             } else {
                 require_once DIR_CONTROLLER . $url . '.php';
+                $modelName = $route[0]. "Model";
+                require_once DIR_MODEL . $modelName . ".php";
                 $url = 'API\Controller\\'.$url;
                 $controller = new $url;
                 $controller->default();
