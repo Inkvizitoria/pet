@@ -68,11 +68,13 @@ body{
     padding: 10px 5px;
 }
 .error{
+    display: none;
     color: red;
     text-align: center;
     border:  2px solid #ff0000;
     border-radius: 30px;
     max-width: none;
+    margin-top: 10px;
     margin-bottom: 25px;
 }
 .form-group{

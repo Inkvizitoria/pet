@@ -2,16 +2,16 @@
 
 namespace API\Controller;
 
+use API\Controller;
 use API\Model\SignInModel;
 use Smarty;
 
-class SignIn
+class SignIn extends Controller
 {
-	public function default($data = null)
+	public function default()
 	{
         $smarty = new Smarty();
 
-        $smarty->assign('error', $data ? $data : null);
         $smarty->assign('title', 'Sign In');
         $smarty->assign('site', 'Lorem Ipsum');
         $smarty->display('API/Template/header.tpl');
@@ -19,25 +19,36 @@ class SignIn
         $smarty->display('API/Template/footer.tpl');
 	}
 
-    public function login(){
-	    $inputData = $_POST;
+    public function signin(){
+	    $inputData = $this->request->post;
 	    $get = new SignInModel();
+        $json = [];
+	    $data = $get->getFieldByWhere(['email' => $inputData['email']], ['email', 'password', 'id'] , 'user');
 
-	    $data = $get->getFieldByValue($inputData['email'], 'email', 'email`, `password', 'user');
+	    if(empty($data['email'])) {
+            $json['error'] = "Check email or password what you input.";
+        }
 
-        if(empty($data[0]['email'])) {
-            $json['error']['login'] = "Check email or password what you input.";
-        } else {
-            if(password_verify($inputData['password'], $data[0]['password'])){
-                echo "Ты не ошибся дверью, fucking slave";
+        if(!password_verify($inputData['password'], $data['password'])) {
+            $json['error'] = "Check email or password what you input.";
+        }
+
+        if(!$json['error']) {
+            $session = $get->getSession($data['id']);
+
+            if ($session == true) {
+                $json['text'] = "You are logged";
             } else {
-                $json['error']['login'] = "Check email or password what you input.";
+                $hash = bin2hex(random_bytes(15));
+                $session = $get->session_save(['random_hash' => $hash, 'user_id' => $data['id']]);
+
+                $_SESSION['secure'] = ['random_hash' => $hash, 'user_id' => $data['id']];
+                $json['text'] = "Ты не ошибся дверью, fucking slave";
+                $json["url"] = 'personal';
             }
         }
-        if(!$json['error']) {
-            echo "Ты не ошибся дверью, fucking slave";
-        } else {
-            return $this->default($json['error']);
-        }
+
+        echo json_encode($json);
+
     }
 }

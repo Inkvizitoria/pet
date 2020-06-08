@@ -2,17 +2,17 @@
 
 namespace API\Controller;
 
+use API\Controller;
+use API\Model\SignUpModel;
 use DateTime;
 use Smarty;
-use API\Model\SignUpModel;
 
-class SignUp
+class SignUp extends Controller
 {
 	public function default($data = null)
 	{
         $smarty = new Smarty();
         $get = new SignUpModel();
-        $smarty->assign('error', $data ? $data : null);
         $smarty->assign('title', 'Registration');
         $smarty->assign('site', 'Lorem Ipsum');
         $smarty->assign('country', $get->getAllCountry());
@@ -25,7 +25,7 @@ class SignUp
     {
         $get = new SignUpModel();
 
-        $data = $_POST;
+        $data = $this->request->post;
         $json = [];
 
         if (!preg_match("/[0-9a-z]+@[a-z]/", $data['email']))
@@ -55,14 +55,12 @@ class SignUp
             $json["error"]["exists"] = "User with this email already exists.<br>";
         }
 
-        if(!$json['error']) {
+        if(!array_key_exists('error', $json)) {
             $data['date_reg'] = (new \DateTime(date(DATE_RFC822)))->format('Y-m-d H:i:s');
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-            $get->registration($data);
-
-            return header('Location: /signin');
-        } else {
-            return $this->default($json['error']);
+            $get->save_user($data);
+            $json["url"] = "signin";
         }
+
+        echo json_encode($json);
     }
 }

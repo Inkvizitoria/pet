@@ -33,14 +33,25 @@ class database
         try {
             if ($stmt = $db->prepare($sql_statement)) {
                 $stmt->execute();
-                if ($result =$stmt->get_result()){
-                    while ($row = $result->fetch_assoc())
-                    {
-                        array_push($query_result, $row);
+                if ($result = $stmt->get_result()){
+                    if(!empty($result->num_rows) && $result->num_rows > 0){
+                        if($result->num_rows == 1){
+                            while ($row = $result->fetch_assoc())
+                            {
+                                $query_result = $row;
+                            }
+                        } else {
+                            while ($row = $result->fetch_assoc())
+                            {
+                                $query_result[] = $row;
+                            }
+                            $stmt->store_result();
+                            $stmt->free_result();
+                        }
+                    } else {
+                        $query_result = null;
                     }
                 }
-                $stmt->store_result();
-                $stmt->free_result();
                 $stmt->close();
             }
             return $query_result;
